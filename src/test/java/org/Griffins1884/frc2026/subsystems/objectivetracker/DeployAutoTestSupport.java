@@ -166,7 +166,7 @@ final class DeployAutoTestSupport {
   }
 
   static RebuiltAutoQueue newQueue(SwerveSubsystem drive) {
-    return new RebuiltAutoQueue(new RebuiltSpotLibrary(), null, drive, newLibrary());
+    return new RebuiltAutoQueue(new RebuiltSpotLibrary(), drive, newLibrary());
   }
 
   static SwerveSubsystem fakeDrive() {

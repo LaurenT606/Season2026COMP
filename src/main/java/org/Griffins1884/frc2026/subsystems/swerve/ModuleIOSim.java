@@ -6,11 +6,11 @@ import static org.Griffins1884.frc2026.subsystems.swerve.SwerveConstants.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import java.util.Arrays;
 import org.Griffins1884.frc2026.simulation.drive.Season2026DriveSimulation;
 import org.Griffins1884.frc2026.simulation.drive.Season2026SwerveCorner;
 import org.Griffins1884.frc2026.util.LoggedTunableNumber;
-import org.Griffins1884.frc2026.util.SparkUtil;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
@@ -118,7 +118,7 @@ public class ModuleIOSim implements ModuleIO {
     inputs.terrainTurnAuthorityScale = lastTurnAuthorityScale;
 
     // Update odometry inputs
-    inputs.odometryTimestamps = SparkUtil.getSimulationOdometryTimeStamps();
+    inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
     inputs.odometryDrivePositionsRad =
         Arrays.stream(moduleSimulation.getCachedDriveWheelFinalPositions())
             .mapToDouble(angle -> angle.in(Radians))

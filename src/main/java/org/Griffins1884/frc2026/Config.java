@@ -9,24 +9,14 @@ import org.Griffins1884.frc2026.OI.SimXboxUniversalMap;
 import org.Griffins1884.frc2026.OI.XboxDriverMap;
 
 public final class Config {
+  private Config() {}
 
   public static final class Subsystems {
-    private static final boolean DRIVEBASE_ONLY_ROBOT =
-        ROBOT == GlobalConstants.RobotType.DBOT || ROBOT == GlobalConstants.RobotType.ECLAIR;
-
     public static final boolean DRIVETRAIN_ENABLED = true;
     public static final boolean AUTONOMOUS_ENABLED = true;
-    public static final boolean VISION_ENABLED = ROBOT != GlobalConstants.RobotType.ECLAIR;
-    public static final boolean LEDS_ENABLED = !DRIVEBASE_ONLY_ROBOT;
     public static final boolean WEBUI_ENABLED = true;
-    public static final boolean TURRET_ENABLED = !DRIVEBASE_ONLY_ROBOT;
-    public static final boolean SHOOTER_ENABLED = !DRIVEBASE_ONLY_ROBOT;
-    public static final boolean SHOOTER_PIVOT_ENABLED = !DRIVEBASE_ONLY_ROBOT;
-    public static final boolean INTAKE_PIVOT_ENABLED = !DRIVEBASE_ONLY_ROBOT;
-    public static final boolean INTAKE_ENABLED = !DRIVEBASE_ONLY_ROBOT;
-    public static final boolean INDEXER_ENABLED = !DRIVEBASE_ONLY_ROBOT;
-    public static final boolean TOOTH_ROLLOUT_ENABLED = false;
-    public static final boolean SPINDEXER_ENABLED = false;
+
+    private Subsystems() {}
   }
 
   public static final class WebUIConfig {
@@ -36,6 +26,8 @@ public final class Config {
     public static final boolean ENABLED = Subsystems.WEBUI_ENABLED;
     public static final String BIND_ADDRESS = DEFAULT_BIND_ADDRESS;
     public static final int PORT = DEFAULT_PORT;
+
+    private WebUIConfig() {}
   }
 
   public static final class Controllers {
@@ -48,11 +40,11 @@ public final class Config {
     }
 
     public static final int DRIVER_PORT = 0;
-    public static final DriverControllerType COMPBOT_DRIVER = DriverControllerType.PS5_PRO;
-    public static final DriverControllerType DBOT_DRIVER = DriverControllerType.PS5_PRO;
     public static final DriverControllerType ECLAIR_DRIVER = DriverControllerType.PS5_PRO;
     public static final DriverControllerType SIMBOT_DRIVER =
         DriverControllerType.SIM_XBOX_UNIVERSAL;
+
+    private Controllers() {}
 
     public static DriverMap getDriverController() {
       return createDriverController(resolveFallbackControllerType());
@@ -60,8 +52,6 @@ public final class Config {
 
     private static DriverControllerType resolveFallbackControllerType() {
       return switch (ROBOT) {
-        case COMPBOT -> COMPBOT_DRIVER;
-        case DBOT -> DBOT_DRIVER;
         case ECLAIR -> ECLAIR_DRIVER;
         case SIMBOT -> SIMBOT_DRIVER;
       };

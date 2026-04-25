@@ -19,8 +19,6 @@ import java.util.Locale;
 import java.util.Optional;
 import org.Griffins1884.frc2026.commands.AlignConstants;
 import org.Griffins1884.frc2026.commands.AutoAlignToPoseCommand;
-import org.Griffins1884.frc2026.subsystems.Superstructure;
-import org.Griffins1884.frc2026.subsystems.Superstructure.SuperState;
 import org.Griffins1884.frc2026.subsystems.objectivetracker.RebuiltSpotLibrary.RebuiltSpot;
 import org.Griffins1884.frc2026.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -33,7 +31,6 @@ final class RebuiltAutoQueue {
   private static final double STOPPING_PATH_TOLERANCE_METERS = 0.14;
 
   private final RebuiltSpotLibrary spotLibrary;
-  private final Superstructure superstructure;
   private final SwerveSubsystem drive;
   private final DeployAutoLibrary autoLibrary;
 
@@ -65,12 +62,8 @@ final class RebuiltAutoQueue {
           "Select a deployed PathPlanner auto to preview and run.");
 
   RebuiltAutoQueue(
-      RebuiltSpotLibrary spotLibrary,
-      Superstructure superstructure,
-      SwerveSubsystem drive,
-      DeployAutoLibrary autoLibrary) {
+      RebuiltSpotLibrary spotLibrary, SwerveSubsystem drive, DeployAutoLibrary autoLibrary) {
     this.spotLibrary = spotLibrary;
-    this.superstructure = superstructure;
     this.drive = drive;
     this.autoLibrary = autoLibrary;
   }
@@ -647,14 +640,7 @@ final class RebuiltAutoQueue {
                   .withTimeout(stepTimeoutSeconds)));
     }
 
-    Command routeCommand = Commands.sequence(routeCommands.toArray(new Command[0]));
-    Optional<SuperState> requestedState = step.resolveRequestedState();
-    if (requestedState.isPresent() && superstructure != null) {
-      return Commands.sequence(
-          Commands.runOnce(() -> superstructure.requestStateFromDashboard(requestedState.get())),
-          routeCommand);
-    }
-    return routeCommand;
+    return Commands.sequence(routeCommands.toArray(new Command[0]));
   }
 
   private List<Pose2d> resolveRoutePoses(QueueStep step) {
@@ -900,14 +886,6 @@ final class RebuiltAutoQueue {
         Optional<Pose2d> pose = step.resolvePose(spotLibrary, getRuntimeAlliance());
         if (pose.isEmpty()) {
           items.add(new QuickRunItem(label, "fail", "Unable to resolve target pose."));
-          continue;
-        }
-        if (step.requestedStateName != null && step.resolveRequestedState().isEmpty()) {
-          items.add(
-              new QuickRunItem(
-                  label,
-                  "fail",
-                  "Requested state \"" + step.requestedStateName + "\" is invalid."));
           continue;
         }
         List<Pose2d> routePoses = resolveRoutePoses(step);
@@ -1283,17 +1261,6 @@ final class RebuiltAutoQueue {
                           pose.getY(),
                           headingDegrees(mirrorHeading(pose.getRotation().getDegrees())))
                       : pose);
-    }
-
-    Optional<SuperState> resolveRequestedState() {
-      if (requestedStateName == null || requestedStateName.isBlank()) {
-        return Optional.empty();
-      }
-      try {
-        return Optional.of(SuperState.valueOf(requestedStateName.trim().toUpperCase(Locale.ROOT)));
-      } catch (IllegalArgumentException ex) {
-        return Optional.empty();
-      }
     }
 
     String displayLabel(RebuiltSpotLibrary spotLibrary) {

@@ -42,7 +42,6 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import org.Griffins1884.frc2026.GlobalConstants;
 import org.Griffins1884.frc2026.commands.AlignConstants;
-import org.Griffins1884.frc2026.subsystems.vision.Vision;
 import org.Griffins1884.frc2026.util.LogRollover;
 import org.Griffins1884.frc2026.util.RobotLogging;
 import org.Griffins1884.frc2026.util.swerve.SwerveSetpoint;
@@ -50,7 +49,7 @@ import org.Griffins1884.frc2026.util.swerve.SwerveSetpointGenerator;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveSubsystem extends SubsystemBase implements Vision.VisionConsumer {
+public class SwerveSubsystem extends SubsystemBase {
   private static final double DRIVE_SYS_ID_MAX_VOLTAGE = 40.0;
   private static final double TURN_SYS_ID_MAX_VOLTAGE = 12.0;
   private static final double SYS_ID_IDLE_WAIT_SECONDS = 0.5;
@@ -63,7 +62,6 @@ public class SwerveSubsystem extends SubsystemBase implements Vision.VisionConsu
   private final SysIdRoutine turnSysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
-  private final SwerveMusicPlayer musicPlayer;
   private double requestedTranslationalMps = 0.0;
   private double requestedOmegaRadPerSec = 0.0;
   private int lastCanTxFullCount = 0;
@@ -134,11 +132,6 @@ public class SwerveSubsystem extends SubsystemBase implements Vision.VisionConsu
     modules[1] = new Module(frModuleIO, 1);
     modules[2] = new Module(blModuleIO, 2);
     modules[3] = new Module(brModuleIO, 3);
-    if (GlobalConstants.MODE != SIM) {
-      musicPlayer = new SwerveMusicPlayer(modules, SwerveConstants.SWERVE_MUSIC_FILE);
-    } else {
-      musicPlayer = null;
-    }
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -650,21 +643,16 @@ public class SwerveSubsystem extends SubsystemBase implements Vision.VisionConsu
   }
 
   public void playSwerveMusic() {
-    if (musicPlayer != null) {
-      musicPlayer.start();
-    }
+    Logger.recordOutput("Swerve/MusicPlayer/Removed", true);
   }
 
   public void stopSwerveMusic() {
-    if (musicPlayer != null) {
-      musicPlayer.stop();
-    }
+    Logger.recordOutput("Swerve/MusicPlayer/Removed", true);
   }
 
   public void setSwerveMusicVolume(double volume) {
-    if (musicPlayer != null) {
-      musicPlayer.setVolume(volume);
-    }
+    Logger.recordOutput("Swerve/MusicPlayer/Removed", true);
+    Logger.recordOutput("Swerve/MusicPlayer/RequestedVolume", volume);
   }
 
   public String getDriveSysIdPhase() {
@@ -1106,7 +1094,6 @@ public class SwerveSubsystem extends SubsystemBase implements Vision.VisionConsu
   }
 
   /** Adds a new timestamped vision measurement. */
-  @Override
   public void accept(
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,

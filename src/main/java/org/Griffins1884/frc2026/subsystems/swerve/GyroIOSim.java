@@ -4,8 +4,8 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import org.Griffins1884.frc2026.simulation.drive.Season2026DriveSimulation;
-import org.Griffins1884.frc2026.util.SparkUtil;
 
 public class GyroIOSim implements GyroIO {
   private final Season2026DriveSimulation simulation;
@@ -28,7 +28,7 @@ public class GyroIOSim implements GyroIO {
     inputs.pitchVelocityRadPerSec = simulation.pitchRateRadPerSec();
     inputs.rollVelocityRadPerSec = simulation.rollRateRadPerSec();
 
-    inputs.odometryYawTimestamps = SparkUtil.getSimulationOdometryTimeStamps();
+    inputs.odometryYawTimestamps = new double[] {Timer.getFPGATimestamp()};
     inputs.odometryYawPositions = simulation.cachedGyroReadings();
   }
 
