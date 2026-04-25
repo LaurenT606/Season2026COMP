@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleRightTrench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightTrenchToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightMess"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "RebuiltWORLDS",
+  "choreoAuto": true
+}
