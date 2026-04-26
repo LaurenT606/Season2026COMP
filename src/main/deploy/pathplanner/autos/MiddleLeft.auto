@@ -19,13 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftMess"
+            "pathName": "LeftMess.0"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "RebuiltWORLDS",
+  "folder": null,
   "choreoAuto": true
 }
