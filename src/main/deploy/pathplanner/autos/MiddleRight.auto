@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleRightTrench"
+            "pathName": "MiddleRightTrench.0"
           }
         },
         {
@@ -26,6 +26,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "RebuiltWORLDS",
+  "folder": null,
   "choreoAuto": true
 }
