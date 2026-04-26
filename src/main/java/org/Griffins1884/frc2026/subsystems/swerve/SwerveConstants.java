@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 import static java.lang.Math.PI;
 import static org.Griffins1884.frc2026.GlobalConstants.ROBOT;
+import static org.Griffins1884.frc2026.subsystems.swerve.SwerveConstants.ROBOT_MASS;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,12 +51,16 @@ public final class SwerveConstants {
   /** Meters */
   public static final double BUMPER_LENGTH =
       switch (ROBOT) {
-        case ECLAIR -> Units.inchesToMeters(42.0);
+        case ECLAIR -> Units.inchesToMeters(19.5);
         case COMPBOT, DBOT, SIMBOT -> Units.inchesToMeters(34.0);
       };
 
   /** Meters */
-  public static final double BUMPER_WIDTH = Units.inchesToMeters(34.0);
+  public static final double BUMPER_WIDTH =
+      switch (ROBOT) {
+        case ECLAIR -> Units.inchesToMeters(48.5);
+        case COMPBOT, DBOT, SIMBOT -> Units.inchesToMeters(34.0);
+      };
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
@@ -257,9 +262,12 @@ public final class SwerveConstants {
   /** Wheel rotations induced per full steering rotation at the motor sensor. */
   public static final double KRAKEN_STEER_DRIVE_COUPLING_RATIO = 4.5;
 
+  public static final double THEORETICAL_MAX_LINEAR_SPEED = 
+      ROBOT == RobotType.ECLAIR ? Units.feetToMeters(16.8) : 5.3;
+
   /** Meters per second */
   public static final double MAX_LINEAR_SPEED =
-      (ROBOT == RobotType.COMPBOT || ROBOT == RobotType.ECLAIR) ? 5.4804 : 5.3;
+      THEORETICAL_MAX_LINEAR_SPEED * 0.85;
 
   /** Radians per second */
   public static final double MAX_ANGULAR_SPEED = (0.5 * MAX_LINEAR_SPEED) / DRIVE_BASE_RADIUS;
@@ -273,17 +281,19 @@ public final class SwerveConstants {
   public static final double WHEEL_FRICTION_COEFF = COTS.WHEELS.SLS_PRINTED_WHEELS.cof;
   private static final double MAPLE_SIM_WHEEL_FRICTION_COEFF = Math.min(WHEEL_FRICTION_COEFF, 1.35);
 
-  /** Kilograms per square meter */
-  public static final double ROBOT_INERTIA = 6.883;
-
   /** Kilograms */
   public static final double ROBOT_MASS = Units.lbsToKilograms(135.0);
 
+  /** Kilograms per square meter */
+  public static final double ROBOT_INERTIA = 
+    ROBOT == RobotType.ECLAIR ? ROBOT_MASS * (BUMPER_LENGTH * BUMPER_LENGTH + BUMPER_WIDTH * BUMPER_WIDTH) / 12
+    : 6.883;
+
   // Drive motor configuration
-  public static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60(1);
+  public static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
 
   public static final double DRIVE_GEAR_RATIO = 5.08; // Spark Max
-  public static final double KRAKEN_DRIVE_GEAR_RATIO = 6.03; // MK5n drive ratio (per team)
+  public static final double KRAKEN_DRIVE_GEAR_RATIO = 6.03; // MK5n R2 Sdrive ratio (per team)
 
   static final boolean DRIVE_INVERTED = true;
 
@@ -319,7 +329,7 @@ public final class SwerveConstants {
   static final double DRIVE_ENCODER_VELOCITY_FACTOR = (2 * Math.PI) / 60.0 / DRIVE_GEAR_RATIO;
 
   // Rotator motor configuration
-  public static final DCMotor TURN_GEARBOX = DCMotor.getKrakenX60(1);
+  public static final DCMotor TURN_GEARBOX = DCMotor.getKrakenX60Foc(1);
 
   public static final double ROTATOR_GEAR_RATIO = 9424.0 / 203.0;
   public static final double KRAKEN_ROTATOR_GEAR_RATIO = 287.0 / 11.0;
